@@ -3,7 +3,7 @@ import re
 
 import requests
 from bs4 import BeautifulSoup
-import utils
+
 
 class WrongCookies(Exception):
     def __init__(self, message="Wrong RR cookies"):
