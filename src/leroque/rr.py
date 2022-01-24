@@ -64,6 +64,3 @@ def authByCookie(_cookies, c, proxies=None):
     session.cookies.update(_cookies)
     return session
 
-acc = authByCookie(utils.getDictFromString('_ym_d=1642005179; _ym_uid=1642005179504794246; _iub_cs-76236742=%7B%22consent%22%3Atrue%2C%22timestamp%22%3A%222022-01-12T16%3A33%3A00.088Z%22%2C%22version%22%3A%221.2.4%22%2C%22id%22%3A76236742%7D; __atuvc=1%7C3; rr=9eaed3508aecdde8eedbe3fea9409d76; rr_id=160819338; rr_add=f96b83aca6c1c84222de35084cc8441e; rr_f=48b0c0e312f9b633c12eae17cb920f5d; _ym_isad=1; PHPSESSID=2rs6ikvs7fbk3p573nj13s8e66'),
-                   '4cecd48d19dc4aa5bc5c2cf6aee45954')
-acc.flyTo(48)
