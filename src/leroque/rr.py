@@ -48,9 +48,20 @@ class RRSession(requests.Session):
             data.update(self.c)
             data.update({'type': typeOf})
             data.update({'b': 1})
-            timeToReturn = re.search(r'{until: (\d+)', self.post(f'https://rivalregions.com/map/region_move/{regId}',
-                                                                 data=data).text).group(0)
+            timeToReturn = int(re.search(r'until: (\d+)', self.post(f'https://rivalregions.com/map/region_move/{regId}',
+                                                                    data=data).text).group(1))
             return timeToReturn
+
+    def autoSet(self, warId, sideId, numOfTanks):
+        if self.checkValid():
+            data = {}
+            data.update({'free_ene': 1})
+            data.update(self.c)
+            data.update({'n': str({"t1": "0", "t2": str(numOfTanks)}).replace("'", '"')})
+            data.update({"aim": sideId})
+            data.update({'edit': warId})
+            self.get(f'https://rivalregions.com/war/details/{warId}', data=self.c)
+            self.post('https://rivalregions.com/war/autoset/', data=data)
 
 
 def authByCookie(_cookies, c, proxies=None):
