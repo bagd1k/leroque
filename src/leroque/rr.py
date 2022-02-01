@@ -63,14 +63,41 @@ class RRSession(requests.Session):
             self.get(f'https://rivalregions.com/war/details/{warId}', data=self.c)
             self.post('https://rivalregions.com/war/autoset/', data=data)
 
+    def renewAuto(self, factoryId, enPermit=False):
+        if self.checkValid():
+            self.post(f"https://rivalregions.com/factory/assign", data={
+                'factory': factoryId,
+                'c': self.c,
+            })
+            if enPermit:
+                self.get(f"https://rivalregions.com/storage/newproduce/17/300", data=self.c)
+            self.post('https://rivalregions.com/work/autoset/', data={
+                'c': self.c,
+                'mentor': 0,
+                'factory': factoryId,
+                'type': 0,
+                'lim': 0,
+            })
 
-def authByCookie(_cookies, c, proxies=None):
+    def getRegId(self):
+        if self.checkValid():
+            def isRegion(tag):
+                if tag.has_attr('action'):
+                    return "map/details/" in tag
+            soup = BeautifulSoup(self.get('https://rivalregions.com/slide/profile/').text)
+            return re.search("(\d+)", soup.find_all(isRegion)[0]).group(1)
+
+
+def authByCookie(_cookies, c, proxies=None, userAgent=None):
     session = RRSession(c)
     if proxies is not None:
         session.proxies.update(proxies)
-    session.headers.update({
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                      '(KHTML, like Gecko) Chrome/81.0.4044.142 Safari/537.36'})
+    if userAgent is None:
+        session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                          '(KHTML, like Gecko) Chrome/81.0.4044.142 Safari/537.36'})
+    else:
+        session.headers.update({'User-Agent': userAgent})
     session.get('https://rivalregions.com/')
     session.cookies.update(_cookies)
     return session
